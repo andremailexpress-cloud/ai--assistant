@@ -25,24 +25,14 @@ async function main() {
   const password = requireEnv('DEV_ADMIN_PASSWORD');
   const mfaSecret = process.env.DEV_ADMIN_MFA_SECRET?.trim() || null;
 
+  const passwordHash = hashPassword(password);
+
   // The current schema does not model roles yet, so this seed creates the
   // designated development operator account with the highest available tier.
   await prisma.user.upsert({
     where: { email },
-    update: {
-      passwordHash: hashPassword(password),
-      mfaSecret,
-      mfaEnabled: Boolean(mfaSecret),
-      tier: UserTier.ENTERPRISE,
-      deletedAt: null,
-    },
-    create: {
-      email,
-      passwordHash: hashPassword(password),
-      mfaSecret,
-      mfaEnabled: Boolean(mfaSecret),
-      tier: UserTier.ENTERPRISE,
-    },
+    update: { passwordHash, mfaSecret, mfaEnabled: Boolean(mfaSecret), tier: UserTier.ENTERPRISE, deletedAt: null },
+    create: { email, passwordHash, mfaSecret, mfaEnabled: Boolean(mfaSecret), tier: UserTier.ENTERPRISE },
   });
 }
 
