@@ -50,11 +50,11 @@ Start:        2026-04-06T00:00:00Z
 Agent:        Codex (Qwen3 pre-pass for boilerplate)
 GitHub Issue: #19
 GitHub Branch: feat/T-P1-001-database-schema
-GitHub PR:    —
-Status:       IN PROGRESS
-QC Agent:     architect + code-reviewer
-QC Status:    PENDING
-QC Notes:     —
+GitHub PR:    #20
+Status:       COMPLETE
+QC Agent:     architect
+QC Status:    PASS (after fixes)
+QC Notes:     Critical fixes applied: mfaSecret made nullable + mfaEnabled flag added (RFC 6238 compliance), licenseKey moved from Skill to License, updatedAt added to UserSkill/License, soft-delete (deletedAt) added to User/License, @@map directives added.
 Merged:       —
 Issue Closed: —
 
