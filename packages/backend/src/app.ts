@@ -16,7 +16,8 @@ export interface BuildAppOptions {
 export async function buildApp(options: BuildAppOptions = {}): Promise<FastifyInstance> {
   const app = fastify({ logger: true });
   const prisma = options.prisma ?? new PrismaClient();
-  const jwtSecret = options.jwtSecret ?? process.env.JWT_SECRET ?? 'development-only-secret';
+  const jwtSecret = options.jwtSecret ?? process.env.JWT_SECRET;
+  if (!jwtSecret) throw new Error('JWT_SECRET environment variable is required');
 
   app.decorate('prisma', prisma);
 

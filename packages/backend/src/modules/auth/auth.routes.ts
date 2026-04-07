@@ -57,7 +57,9 @@ export const authRoutes: FastifyPluginAsync = async (app) => {
     }
   });
 
-  app.post('/auth/logout', async (request, reply) => {
+  app.post('/auth/logout', {
+    config: { rateLimit: { max: 20, timeWindow: '15 minutes' } },
+  }, async (request, reply) => {
     try {
       const input = logoutSchema.parse(request.body) as LogoutInput;
       await app.authService.logout(input);
@@ -67,7 +69,9 @@ export const authRoutes: FastifyPluginAsync = async (app) => {
     }
   });
 
-  app.post('/auth/refresh', async (request, reply) => {
+  app.post('/auth/refresh', {
+    config: { rateLimit: { max: 20, timeWindow: '15 minutes' } },
+  }, async (request, reply) => {
     try {
       const input = refreshSchema.parse(request.body) as RefreshInput;
       const result = await app.authService.refresh(input);

@@ -15,6 +15,9 @@ export async function verifyJwt(request: FastifyRequest, reply: FastifyReply): P
       throw new AuthError('Invalid access token', 401);
     }
   } catch (error: unknown) {
+    if (!(error instanceof AuthError)) {
+      request.log.error({ err: error }, 'Unexpected error during JWT verification');
+    }
     reply.status(401).send({ message: 'Unauthorized' });
   }
 }

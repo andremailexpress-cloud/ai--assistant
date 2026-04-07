@@ -127,9 +127,8 @@ export class AuthService {
       where: { tokenHash: hashRefreshToken(input.refreshToken) },
     });
 
-    if (deleted.count === 0) {
-      throw new AuthError('Session not found', 404);
-    }
+    // Return silently even if session not found — avoids session-existence oracle
+    void deleted;
   }
 
   public async refresh(input: RefreshInput): Promise<RefreshResult> {
