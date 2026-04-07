@@ -1,0 +1,2 @@
+ALTER TABLE "users" ADD COLUMN "mfaLastUsedToken" TEXT;
+ALTER TABLE "users" ADD COLUMN "mfaLastUsedAt" TIMESTAMPTZ(6);

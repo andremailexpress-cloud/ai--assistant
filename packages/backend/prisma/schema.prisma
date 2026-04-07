@@ -26,6 +26,8 @@ model User {
   passwordHash String
   mfaSecret    String?
   mfaEnabled   Boolean     @default(false)
+  mfaLastUsedToken String?
+  mfaLastUsedAt    DateTime? @db.Timestamptz(6)
   tier         UserTier    @default(FREE)
   deletedAt    DateTime?   @db.Timestamptz(6)
   createdAt    DateTime    @default(now()) @db.Timestamptz(6)

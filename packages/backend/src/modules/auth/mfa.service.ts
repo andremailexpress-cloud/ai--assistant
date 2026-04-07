@@ -107,7 +107,6 @@ export class MfaService {
     }
 
     const passwordMatches = await verifyPassword(input.password, user.passwordHash);
-    const secret = this.getStoredSecret(user.mfaSecret);
 
     if (!passwordMatches) {
       throw new MfaError('Invalid password or MFA token', 401);

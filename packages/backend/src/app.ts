@@ -45,10 +45,10 @@ export async function buildApp(options: BuildAppOptions = {}): Promise<FastifyIn
     signAccessToken: async (payload: JwtTokenPayload) => app.jwt.sign(payload, { expiresIn: getAccessTokenTtl() }),
     signRefreshToken: async (payload: JwtTokenPayload) => app.jwt.sign(payload, { expiresIn: getRefreshTokenTtl() }),
     signMfaSessionToken: async (payload: JwtTokenPayload) =>
-      app.jwt.sign(payload, { secret: mfaSessionSecret, expiresIn: getMfaSessionTokenTtl() }),
+      app.jwt.sign(payload, { key: mfaSessionSecret, expiresIn: getMfaSessionTokenTtl() }),
     verifyRefreshToken: async (token: string) => app.jwt.verify<JwtTokenPayload>(token),
     verifyMfaSessionToken: async (token: string) =>
-      app.jwt.verify<JwtTokenPayload>(token, { secret: mfaSessionSecret }),
+      app.jwt.verify<JwtTokenPayload>(token, { key: mfaSessionSecret }),
   };
   const authService = options.authService ?? new AuthService({
     prisma,
