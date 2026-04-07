@@ -87,6 +87,20 @@ Merged:       2026-04-07T00:00:00Z
 Issue Closed: 2026-04-07T00:00:00Z
 
 ---
+T-P1-004 | MFA/TOTP (setup, verify, disable, challenge)
+Start:        2026-04-07T00:00:00Z
+Agent:        Codex
+GitHub Issue: #25
+GitHub Branch: feat/T-P1-004-mfa
+GitHub PR:    —
+Status:       QC PENDING
+QC Agent:     security-reviewer + code-reviewer
+QC Status:    FAIL — Round 1 fixes in progress
+QC Notes:     CRITICAL: verify import collision (all TOTP checks broken), TOTP replay attack (no used-token cache), shared JWT secret for mfa_pending tokens. HIGH: setup() overwrites enabled MFA, challenge() missing return type, negative-path tests missing. Round 2 fix prompt issued to Codex 2026-04-07.
+Merged:       —
+Issue Closed: —
+
+---
 T-P0-ADRs | Research ADRs — deferred per Option C strategy
 Start:        2026-04-05T22:19:00Z
 Agent:        Claude (inline, no agents)
