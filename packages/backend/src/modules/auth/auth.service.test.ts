@@ -3,6 +3,7 @@ import {
   AuthError,
   AuthService,
   getAccessTokenTtl,
+  getMfaSessionTokenTtl,
   getRefreshTokenTtl,
   hashPassword,
   verifyPassword,
@@ -32,10 +33,16 @@ function createJwtSignerMock() {
   return {
     signAccessToken: jest.fn().mockResolvedValue('access-token'),
     signRefreshToken: jest.fn().mockResolvedValue('refresh-token'),
+    signMfaSessionToken: jest.fn().mockResolvedValue('mfa-session-token'),
     verifyRefreshToken: jest.fn().mockResolvedValue({
       sub: 'user-1',
       email: 'user@example.com',
       type: 'refresh' as const,
+    }),
+    verifyMfaSessionToken: jest.fn().mockResolvedValue({
+      sub: 'user-1',
+      email: 'user@example.com',
+      type: 'mfa_pending' as const,
     }),
   };
 }
@@ -88,6 +95,7 @@ describe('AuthService', () => {
       email: 'user@example.com',
       deletedAt: null,
       passwordHash: await hashPassword('very-secure-password'),
+      mfaEnabled: false,
     });
     prisma.session.create = jest.fn().mockResolvedValue({ id: 'session-1' });
     const now = new Date('2026-04-07T00:00:00.000Z');
@@ -114,7 +122,37 @@ describe('AuthService', () => {
         }),
       }),
     );
+    if ('mfaRequired' in result) {
+      throw new Error('Expected login to return access and refresh tokens');
+    }
+
     expect(result.refreshToken).toBe('refresh-token');
+  });
+
+  it('returns an MFA challenge instead of issuing tokens when MFA is enabled', async () => {
+    const prisma = createPrismaMock();
+    const jwtSigner = createJwtSignerMock();
+    prisma.user.findUnique = jest.fn().mockResolvedValue({
+      id: 'user-1',
+      email: 'user@example.com',
+      deletedAt: null,
+      passwordHash: await hashPassword('very-secure-password'),
+      mfaEnabled: true,
+    });
+    const service = new AuthService({ prisma, jwtSigner });
+
+    const result = await service.login({ email: 'user@example.com', password: 'very-secure-password' });
+
+    expect(jwtSigner.signMfaSessionToken).toHaveBeenCalledWith({
+      sub: 'user-1',
+      email: 'user@example.com',
+      type: 'mfa_pending',
+    });
+    expect(prisma.session.create).not.toHaveBeenCalled();
+    expect(result).toEqual({
+      mfaRequired: true,
+      mfaSessionToken: 'mfa-session-token',
+    });
   });
 
   it('deletes the session on logout', async () => {
@@ -155,5 +193,6 @@ describe('AuthService', () => {
   it('exposes the intended token lifetimes', () => {
     expect(getAccessTokenTtl()).toBe('15m');
     expect(getRefreshTokenTtl()).toBe('7d');
+    expect(getMfaSessionTokenTtl()).toBe('5m');
   });
 });

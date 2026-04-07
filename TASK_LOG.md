@@ -78,11 +78,25 @@ Start:        2026-04-07T00:00:00Z
 Agent:        Codex
 GitHub Issue: #23
 GitHub Branch: feat/T-P1-003-user-auth
-GitHub PR:    —
-Status:       IN PROGRESS
+GitHub PR:    #24
+Status:       COMPLETE
 QC Agent:     security-reviewer
-QC Status:    PENDING
-QC Notes:     —
+QC Status:    PASS (after fixes)
+QC Notes:     Fixed: JWT_SECRET now throws on missing (no dev fallback), rate limiting added to logout/refresh, verifyJwt logs unexpected errors, password max 128 chars (scrypt DoS prevention), logout returns 204 unconditionally (session oracle removed). DEFERRED: CORS origin restriction (pre-production task), scrypt N/r/p explicit constants.
+Merged:       2026-04-07T00:00:00Z
+Issue Closed: 2026-04-07T00:00:00Z
+
+---
+T-P1-004 | MFA/TOTP (setup, verify, disable, challenge)
+Start:        2026-04-07T00:00:00Z
+Agent:        Codex
+GitHub Issue: #25
+GitHub Branch: feat/T-P1-004-mfa
+GitHub PR:    #26
+Status:       QC PENDING
+QC Agent:     security-reviewer + code-reviewer
+QC Status:    PASS (after fixes)
+QC Notes:     Round 1 CRITICAL: verify import collision fixed (totpVerify alias), TOTP replay protection added (mfaLastUsedToken/mfaLastUsedAt + migration), mfa_pending JWT uses separate MFA_SESSION_SECRET. Round 1 HIGH: setup() guards against reconfigure when enabled, challenge() return type explicit, 5 negative-path tests added. DEFERRED: per-IP challenge rate limit (Phase 6 hardening), CORS wildcard (Phase 7 pre-production), UTF-8 key path warning (Phase 6).
 Merged:       —
 Issue Closed: —
 

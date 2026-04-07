@@ -6,18 +6,23 @@ import type { LoginInput, RefreshInput, RegisterInput } from './auth.schema';
 const scrypt = promisify(scryptCallback);
 const ACCESS_TOKEN_TTL = '15m';
 const REFRESH_TOKEN_TTL = '7d';
+const MFA_SESSION_TOKEN_TTL = '5m';
 const REFRESH_TOKEN_TTL_MS = 7 * 24 * 60 * 60 * 1000;
 
-interface TokenPayload {
+export type JwtTokenType = 'access' | 'refresh' | 'mfa_pending';
+
+export interface JwtTokenPayload {
   sub: string;
   email: string;
-  type: 'access' | 'refresh';
+  type: JwtTokenType;
 }
 
 export interface JwtSigner {
-  signAccessToken(payload: TokenPayload): Promise<string>;
-  signRefreshToken(payload: TokenPayload): Promise<string>;
-  verifyRefreshToken(token: string): Promise<TokenPayload>;
+  signAccessToken(payload: JwtTokenPayload): Promise<string>;
+  signRefreshToken(payload: JwtTokenPayload): Promise<string>;
+  signMfaSessionToken(payload: JwtTokenPayload): Promise<string>;
+  verifyRefreshToken(token: string): Promise<JwtTokenPayload>;
+  verifyMfaSessionToken(token: string): Promise<JwtTokenPayload>;
 }
 
 export interface AuthServiceDependencies {
@@ -31,11 +36,18 @@ export interface RegisterResult {
   user: { id: string; email: string };
 }
 
-export interface LoginResult {
+export interface LoginSuccessResult {
   accessToken: string;
   refreshToken: string;
   user: { id: string; email: string };
 }
+
+export interface MfaPendingLoginResult {
+  mfaRequired: true;
+  mfaSessionToken: string;
+}
+
+export type LoginResult = LoginSuccessResult | MfaPendingLoginResult;
 
 export interface RefreshResult {
   accessToken: string;
@@ -89,7 +101,7 @@ export class AuthService {
     const email = input.email.trim().toLowerCase();
     const user = await this.prisma.user.findUnique({
       where: { email },
-      select: { id: true, email: true, passwordHash: true, deletedAt: true },
+      select: { id: true, email: true, passwordHash: true, deletedAt: true, mfaEnabled: true },
     });
 
     if (!user || user.deletedAt) {
@@ -103,23 +115,23 @@ export class AuthService {
     }
 
     const signer = this.getJwtSigner();
-    const tokenPayload: TokenPayload = { sub: user.id, email: user.email, type: 'refresh' };
-    const accessToken = await signer.signAccessToken({ ...tokenPayload, type: 'access' });
-    const refreshToken = await signer.signRefreshToken(tokenPayload);
 
-    await this.prisma.session.create({
-      data: {
-        userId: user.id,
-        tokenHash: hashRefreshToken(refreshToken),
-        expiresAt: new Date(this.now().getTime() + REFRESH_TOKEN_TTL_MS),
-      },
-    });
+    if (user.mfaEnabled) {
+      const mfaSessionToken = await signer.signMfaSessionToken({
+        sub: user.id,
+        email: user.email,
+        type: 'mfa_pending',
+      });
 
-    return {
-      accessToken,
-      refreshToken,
+      return { mfaRequired: true, mfaSessionToken };
+    }
+
+    return issueLoginTokensAndCreateSession({
+      prisma: this.prisma,
+      jwtSigner: signer,
+      now: this.now,
       user: { id: user.id, email: user.email },
-    };
+    });
   }
 
   public async logout(input: RefreshInput): Promise<void> {
@@ -207,10 +219,48 @@ export function hashRefreshToken(token: string): string {
   return createHash('sha256').update(token).digest('hex');
 }
 
+export async function issueLoginTokensAndCreateSession(
+  dependencies: {
+    prisma: Pick<PrismaClient, 'session'>;
+    jwtSigner: JwtSigner;
+    now: () => Date;
+    user: { id: string; email: string };
+  },
+): Promise<LoginSuccessResult> {
+  const refreshPayload: JwtTokenPayload = {
+    sub: dependencies.user.id,
+    email: dependencies.user.email,
+    type: 'refresh',
+  };
+  const accessToken = await dependencies.jwtSigner.signAccessToken({
+    ...refreshPayload,
+    type: 'access',
+  });
+  const refreshToken = await dependencies.jwtSigner.signRefreshToken(refreshPayload);
+
+  await dependencies.prisma.session.create({
+    data: {
+      userId: dependencies.user.id,
+      tokenHash: hashRefreshToken(refreshToken),
+      expiresAt: new Date(dependencies.now().getTime() + REFRESH_TOKEN_TTL_MS),
+    },
+  });
+
+  return {
+    accessToken,
+    refreshToken,
+    user: { id: dependencies.user.id, email: dependencies.user.email },
+  };
+}
+
 export function getAccessTokenTtl(): string {
   return ACCESS_TOKEN_TTL;
 }
 
 export function getRefreshTokenTtl(): string {
   return REFRESH_TOKEN_TTL;
+}
+
+export function getMfaSessionTokenTtl(): string {
+  return MFA_SESSION_TOKEN_TTL;
 }

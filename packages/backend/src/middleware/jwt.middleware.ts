@@ -4,7 +4,7 @@ import { AuthError } from '../modules/auth/auth.service';
 export interface AccessTokenPayload {
   sub: string;
   email: string;
-  type: 'access' | 'refresh';
+  type: 'access';
 }
 
 export async function verifyJwt(request: FastifyRequest, reply: FastifyReply): Promise<void> {
@@ -19,5 +19,6 @@ export async function verifyJwt(request: FastifyRequest, reply: FastifyReply): P
       request.log.error({ err: error }, 'Unexpected error during JWT verification');
     }
     reply.status(401).send({ message: 'Unauthorized' });
+    return;
   }
 }
