@@ -78,13 +78,13 @@ Start:        2026-04-07T00:00:00Z
 Agent:        Codex
 GitHub Issue: #23
 GitHub Branch: feat/T-P1-003-user-auth
-GitHub PR:    —
-Status:       IN PROGRESS
+GitHub PR:    #24
+Status:       COMPLETE
 QC Agent:     security-reviewer
-QC Status:    PENDING
-QC Notes:     —
-Merged:       —
-Issue Closed: —
+QC Status:    PASS (after fixes)
+QC Notes:     Fixed: JWT_SECRET now throws on missing (no dev fallback), rate limiting added to logout/refresh, verifyJwt logs unexpected errors, password max 128 chars (scrypt DoS prevention), logout returns 204 unconditionally (session oracle removed). DEFERRED: CORS origin restriction (pre-production task), scrypt N/r/p explicit constants.
+Merged:       2026-04-07T00:00:00Z
+Issue Closed: 2026-04-07T00:00:00Z
 
 ---
 T-P0-ADRs | Research ADRs — deferred per Option C strategy
