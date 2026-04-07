@@ -64,9 +64,23 @@ Start:        2026-04-07T00:00:00Z
 Agent:        Codex
 GitHub Issue: #21
 GitHub Branch: feat/T-P1-002-prisma-migrations
+GitHub PR:    #22
+Status:       COMPLETE
+QC Agent:     code-reviewer
+QC Status:    PASS (after fixes)
+QC Notes:     Fixed: single hashPassword call in seed, prisma CLI moved to devDependencies, duplicate tsx removed. DEFERRED: mfaSecret plaintext encryption to T-P1-004.
+Merged:       2026-04-07T00:00:00Z
+Issue Closed: 2026-04-07T00:00:00Z
+
+---
+T-P1-003 | User registration & login API (JWT)
+Start:        2026-04-07T00:00:00Z
+Agent:        Codex
+GitHub Issue: #23
+GitHub Branch: feat/T-P1-003-user-auth
 GitHub PR:    —
 Status:       IN PROGRESS
-QC Agent:     code-reviewer
+QC Agent:     security-reviewer
 QC Status:    PENDING
 QC Notes:     —
 Merged:       —
