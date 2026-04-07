@@ -92,9 +92,8 @@ Start:        2026-04-07T00:00:00Z
 Agent:        Codex
 GitHub Issue: #25
 GitHub Branch: feat/T-P1-004-mfa
-GitHub PR:    —
-Status:       QC PENDING
 GitHub PR:    #26
+Status:       QC PENDING
 QC Agent:     security-reviewer + code-reviewer
 QC Status:    PASS (after fixes)
 QC Notes:     Round 1 CRITICAL: verify import collision fixed (totpVerify alias), TOTP replay protection added (mfaLastUsedToken/mfaLastUsedAt + migration), mfa_pending JWT uses separate MFA_SESSION_SECRET. Round 1 HIGH: setup() guards against reconfigure when enabled, challenge() return type explicit, 5 negative-path tests added. DEFERRED: per-IP challenge rate limit (Phase 6 hardening), CORS wildcard (Phase 7 pre-production), UTF-8 key path warning (Phase 6).
