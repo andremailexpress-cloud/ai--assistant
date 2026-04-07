@@ -94,9 +94,10 @@ GitHub Issue: #25
 GitHub Branch: feat/T-P1-004-mfa
 GitHub PR:    —
 Status:       QC PENDING
+GitHub PR:    #26
 QC Agent:     security-reviewer + code-reviewer
-QC Status:    FAIL — Round 1 fixes in progress
-QC Notes:     CRITICAL: verify import collision (all TOTP checks broken), TOTP replay attack (no used-token cache), shared JWT secret for mfa_pending tokens. HIGH: setup() overwrites enabled MFA, challenge() missing return type, negative-path tests missing. Round 2 fix prompt issued to Codex 2026-04-07.
+QC Status:    PASS (after fixes)
+QC Notes:     Round 1 CRITICAL: verify import collision fixed (totpVerify alias), TOTP replay protection added (mfaLastUsedToken/mfaLastUsedAt + migration), mfa_pending JWT uses separate MFA_SESSION_SECRET. Round 1 HIGH: setup() guards against reconfigure when enabled, challenge() return type explicit, 5 negative-path tests added. DEFERRED: per-IP challenge rate limit (Phase 6 hardening), CORS wildcard (Phase 7 pre-production), UTF-8 key path warning (Phase 6).
 Merged:       —
 Issue Closed: —
 
