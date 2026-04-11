@@ -64,3 +64,10 @@ Key files:
 - **Claude** — planning, QC, architecture
 - **Codex** — implementation
 - **Qwen3** — boilerplate, scaffolding, tests
+## Team Roles
+
+- **Claude (Sonnet 4.6)** — **Head of Planning & Architecture.** Operates at the top level for complex reasoning and system-wide reviews. Minimal token usage (special cases only).
+- **Qwen3 (480b)** — **Primary Implementation & Chat.** The daily driver for logic and coding tasks.
+- **Codex** — **Specialist Coder.** Invoked for production-grade implementation when Qwen3 requires assistance.
+- **DeepSeek (V4)** — **The Shadow / Substitute.** Bench model to replace Codex or Qwen3 if malfunctions occur or high-precision logic is required.
+- **Qwen2.5 Coder** — **Scaffolding & Boilerplate.** Handles repetitive code patterns and initial file structures via Continue/Autocomplete.

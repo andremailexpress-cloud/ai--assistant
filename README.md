@@ -304,7 +304,7 @@ After 1 Month: Orb with 3-4 skills, plasma effects, personalized workspace
 After 3 Months: Complex multi-colored energy orb, 5+ skills, rich workspace with analytics
 This transforms your assistant from a chatbot into an intelligent living entity that users actually want to interact with daily. The avatar literally grows and evolves with them.
 
-Want me to create GitHub issues for:
+create GitHub issues for:
 
 Three.js avatar rendering system?
 Workspace panel architecture?

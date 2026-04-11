@@ -4,9 +4,13 @@
 
 ---
 
-## Chain of Command
-
-```
+## Chain of Command v1.2(revised)latest
+USER (Owner / Final Authority)
+  └── CLAUDE (Head of Planning — Emergency/High-Level Oversight)
+        ├── QWEN3 (Primary Agent — Active Logic & Implementation)
+        ├── CODEX / DEEPSEEK (Specialist Substitutes — Complex Code Blocks)
+        └── QWEN 2.5 (Boilerplate Agent — Scaffolding)
+```##chain of comand v1.1(revised)
 USER (Owner / Final Authority)
   └── CLAUDE (Head of Planning & Oversight — this agent)
         ├── CODEX (Coding Agent — all implementation)

@@ -84,7 +84,7 @@ The technical stack is the vehicle. Psychology is the engine.
 - HRV (Heart Rate Variability) as recovery/stress proxy
 - Ultradian Rhythms — 90–120 min work/rest cycles (Kleitman)
 
-### 6. Behavioral Economics
+### 6. Behavioral Eonomics
 - Hyperbolic Discounting — present bias: people over-value immediate rewards
 - Loss Aversion (Kahneman/Tversky) — losses feel ~2x stronger than equivalent gains
 - Mental Accounting — people categorize money differently depending on source
@@ -131,7 +131,7 @@ The technical stack is the vehicle. Psychology is the engine.
 
 Every psychology research task must produce:
 
-1. **Summary** — Plain language, 300–500 words
+1. **Summary** — Plainc language, 300–500 words
 2. **Key findings** — Bullet points, with citations (author, year, study)
 3. **Direct application** — How this finding maps to a specific platform feature
 4. **Implementation note** — What Codex needs to know when building that feature
