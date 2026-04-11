@@ -1,218 +1,46 @@
-# ai -assistant
-Key Strengths of This Plan:
-1. Modular Architecture
-Plugin System: Each skill is self-contained with clear interfaces, making it trivial to add/remove capabilities without touching core code
-Skill Registry: Centralized discovery and loading system that hot-swaps modules at runtime
-Isolated Skills: Sandboxed execution prevents one skill from breaking others
-2. Per-User Learning System
-Fresh Start: Each user gets a blank slate assistant that learns their specific needs
-Personalization Engine: Tracks preferences, habits, routines, and interaction patterns
-Context Injection: The LLM receives enriched user context for smarter, personalized responses
-Memory Layers: Both global (preferences) and skill-specific (e.g., calendar knows user's schedule)
-3. Living Avatar Experience
-Emotional Intelligence: Avatar reacts to user behavior, displays mood/state based on assistant's internal model
-Multi-Platform: Works on mobile, web, desktop with consistent persona
-Proactive: Can initiate helpful suggestions based on learned user patterns
-4. Scalability
-Core Stays Stable: New skills don't require core platform changes
-User Isolation: Data siloed completely—each user has their own model, memories, and preferences
-Gemini Flash Integration: Lightweight yet capable LLM as the reasoning backbone
-5. Privacy-First
-Zero knowledge between users
-GDPR-ready flows
-Encrypted data in transit and at rest
-Next Steps I Recommend:
-Define Your Skill Library - What's the MVP skill set? (e.g., task management, health tracking, learning coach, productivity)
-Choose Your Tech Stack - Frontend (React/Flutter?), backend (Node/Python?), database (PostgreSQL + Vector DB for embeddings?)
-Build Phase 1 MVP - Core + 2-3 skills + basic avatar before expanding
-User Research - Test with early users to refine the learning/personalization loop
-Would you like me to:
 
-Create detailed GitHub issues breaking down each phase?
-Design the database schema for user modeling?
-Draft a skill plugin SDK specification?
-Outline the Gemini 1.5 integration strategy?
-Agent Swarm Benefits for Your System:
-1. Distributed Skill Execution
-Parallel Processing: Multiple agents handle different skills simultaneously (calendar sync + health analysis + task prioritization at once)
-Skill Agents: Each skill becomes an autonomous agent vs. just a passive module
-Coordination Layer: A master agent orchestrates which sub-agents to activate based on user intent
-2. Intelligent Routing & Decision-Making
-Intent Detection Agent: Routes user input to appropriate skill agents
-Context Agent: Maintains and updates user models, learning patterns
-Prioritization Agent: Decides which recommendations matter most (health > work > personal)
-Reasoning Agent: Coordinates multi-step tasks (e.g., "help me with my fitness" ? blocks calendar, schedules gym time, tracks nutrition)
-3. Per-User Agent Instances
-Each user gets their own swarm instance (fresh start, no cross-user contamination)
-Agents within the swarm learn together about that user's patterns
-Swarm "personality" adapts over time ? living avatar reflects swarm state
-4. Scalability
-Agents can be spun up/down dynamically based on load
-New skill agents added without touching core orchestration
-Distributed agent framework (e.g., AutoGen, Crew.ai, or custom) handles threading
-5. Avatar Responsiveness
-Avatar reflects swarm state: if multiple agents are "thinking," avatar shows activity
-Swarm consensus drives avatar emotion (confident suggestion vs. uncertain recommendation)
-Simplified Swarm Architecture:
-Code
-[User Input]
-    ?
-[Master/Orchestrator Agent]
-    ?? [Intent Detection Agent]
-    ?? [User Context Agent]
-    ?? [Skill Agent 1: Calendar]
-    ?? [Skill Agent 2: Health]
-    ?? [Skill Agent 3: Productivity]
-    ?? [Reasoning Agent]
-    ?
-[Response + Avatar Reaction]
-Implementation Consideration:
-Framework Choice: AutoGen (Microsoft), Crew.ai, or LangGraph (LangChain) could orchestrate agents
-LLM per Agent: Each agent calls Gemini Flash independently OR shared context through the master
-State Management: Shared user model so agents collaborate, not conflict
-This transforms your modular plugin system into a collaborative multi-agent ecosystem—more intelligent, parallel, and adaptive.
+# AI Assistant
 
-Core Concept: Gated Skill Licensing
-1. Software License/Authentication Layer
-Each skill you produce has a unique license key tied to your software
-User can only attach a skill if:
-They have a valid license for that skill
-Your verification service confirms it's active
-The attachment is cryptographically validated (prevents spoofing)
-2. Tiered Attachment Limits
-Code
-Free Tier:     Max 2 skills attached
-Pro Tier:      Max 5 skills attached
-Enterprise:    Max 15 skills attached
-Limit enforced at attachment time (API validation)
-Database tracks active attachments per user/assistant
-Attempting to exceed tier limit ? error/upsell prompt
-3. Implementation Flow
-Code
-User tries to attach [Your Calendar + Health Skill]
-    ?
-[Skill Attachment Request]
-    ?? Verify license key exists & is valid
-    ?? Check if user's tier allows attachment
-    ?? Count current attachments
-    ?? If valid: attach + log in DB
-    ?? If invalid: reject + show reason
-4. Technical Components Needed
-A. License Server (you control)
+**Status:** Core pipeline working • File indexing active • Avatar UI in progress
 
-Issues/validates license keys
-Tracks which licenses are active/inactive
-Revoke capability (subscription expired, etc.)
-B. Skill Manifest
+A personal AI that remembers your files and context across sessions.
+A modular, personalized AI assistant built with Python (and Java capabilities). It learns from the user, handles files intelligently, and can be extended with custom skills.
 
-JSON
-{
-  "skillId": "calendar-health-bundle-v1",
-  "vendor": "andremailexpress-cloud",
-  "requiredLicense": "SKU-CHB-001",
-  "tier": "pro",
-  "attachmentCost": 1
-}
-C. Core Platform Validation
+This is my flagship personal project that demonstrates strong skills in:
+- Clean Python architecture & modular design
+- Systems thinking & pipeline development
+- Creative problem-solving
+- AI integration (Gemini Flash backbone)
+- Self-taught software engineering
 
-TypeScript
-async attachSkill(userId, skillId, licenseKey) {
-  // 1. Validate license with your server
-  const isValid = await verifyLicense(licenseKey, skillId);
-  if (!isValid) throw new Error("Invalid license");
-  
-  // 2. Check tier limits
-  const userTier = await getUserTier(userId);
-  const attached = await countAttachedSkills(userId);
-  const tierLimit = TIER_LIMITS[userTier];
-  
-  if (attached >= tierLimit) {
-    throw new Error(`Tier ${userTier} allows max ${tierLimit} skills`);
-  }
-  
-  // 3. Attach
-  await attachSkillToUser(userId, skillId);
-}
-5. Security Measures
-License keys are hashed in your DB (never plaintext)
-API calls to verify licenses use HTTPS + mutual TLS
-Skills can be remotely disabled if license is revoked
-Audit logging: who attached what, when
-6. User Experience
-Skill Marketplace: Show available skills + their tier requirements
-License Manager: Dashboard for managing active licenses and attachments
-Upgrade Prompts: "You've reached your 2-skill limit. Upgrade to Pro to add 3 more."
-Additional Revenue/Control Options:
-Per-Skill Pricing: Not just tiers, but individual skill pricing
-Subscription Model: Licenses auto-renew monthly/yearly
-Usage Metering: Premium features within skills (e.g., "health analysis" has rate limits)
-Skill Versioning: Only allow latest version or let users pin older versions
-Regional/Organization Gates: Attach skills only to specific orgs/regions
-This gives you complete control over:
+Live demo / screenshots coming soon.
 
-? Who can use your skills
-? How many they can attach (by tier)
-? Revenue stream (licensing)
-? Quality (versioning/updates)
-"Generative Avatar with Emotional Expression" or "Parametric Animation UI"
+## Key Features (Current MVP)
 
-Where parameters like:
+- **Modular Skill System** — Add or remove capabilities without breaking the core
+- **Per-User Learning** — Each user gets a fresh assistant that adapts over time
+- **File Workspace** — Drag & drop documents, PDFs, code, notes → the assistant indexes them and uses the content for better answers
+- **Living Avatar** — Visual representation that reacts to the assistant’s state (thinking, confident, learning, etc.)
+- **Agent-like Coordination** — Skills can work together intelligently
+- **Privacy-First Design** — Complete user isolation
 
-Confidence ? Color saturation
-Processing Load ? Movement speed
-Emotion ? Shape morphing + hue shifts
-Speech/Voice ? Frequency-mapped animation
-Implementation for Your Avatar:
-TypeScript
-interface AvatarState {
-  emotion: "confident" | "uncertain" | "thinking" | "happy" | "concerned";
-  confidence: 0-1;
-  processingLoad: 0-1;
-  voiceFrequency: Hz;
-}
+## Tech Stack
 
-// Maps state to visual/audio output
-function renderAvatar(state: AvatarState) {
-  const hue = mapEmotionToColor(state.emotion);
-  const saturation = state.confidence * 100;
-  const animationSpeed = state.processingLoad * 2;
-  const audioTone = state.voiceFrequency;
-  
-  return {
-    color: `hsl(${hue}, ${saturation}%, 50%)`,
-    movement: `pulse ${animationSpeed}s infinite`,
-    voice: generateTone(audioTone)
-  };
-}
-Tech Stack for This:
-Frontend: Three.js / Babylon.js (3D avatar) or SVG + Canvas (2D)
-Voice: Web Audio API + TTS (text-to-speech) with emotional inflection
-Animation: WebGL shaders for smooth color/movement transitions
-Real-time Sync: WebSockets to push AI state ? avatar updates instantly
+- **Core Language**: Python
+- **LLM Integration**: Google Gemini Flash 1.5
+- **Architecture**: Modular plugin system with skill registry
+- **Frontend/UI**: (React / Three.js for avatar – in progress)
+- **Additional Skills**: Java components available when needed for performance-critical parts
+- **Planned**: Vector embeddings, knowledge graph, agent swarm orchestration
 
-Implementation Strategy: Living Workspace Avatar
-1. Core Concept: Dynamic Home Canvas
-Instead of a static background, the home screen is an interactive 3D environment where:
+## What This Project Shows About Me
 
-The avatar is the centerpiece (evolves over time)
-Skills/attachments appear as floating modules around it
-Background responds to assistant's state (calm blue ? intense red/plasma)
-Can dock/attach workspace panels like VS Code (terminal, chat, skill manager, etc.)
-2. Avatar States (Red Sphere ? Plasma Orb)
-TypeScript
-interface AvatarStage {
-  level: 0-100; // User progression
-  visual: {
-    shape: "sphere" | "orb" | "complex";
-    baseColor: hslColor;
-    complexity: particleCount; // More skills = more particles
-    intensity: glowIntensity;
-    animation: speed; // Faster = more skilled
-  };
-  skillsAttached: number;
-  confidenceLevel: 0-1;
-}
+- **Strong Problem Solver** — Built a complex system from scratch with clean separation of concerns
+- **Systems Architecture** — Designed for scalability, user isolation, and easy extensibility
+- **Creative & Practical** — Focused on real user value (personalization + file context) instead of just another chatbot
+- **Self-Taught Capability** — No formal CS degree — everything learned through building real projects
 
+<<<<<<< HEAD
 // Stage transitions
 0-20:    Simple red sphere (learning)
 20-50:   Glowing orb (gaining skills)
@@ -2608,7 +2436,19 @@ When new skills activate
 When conflicts arise
 When alignment checks detect drift
 Format: Markdown table + status indicators so you see at a glance what's healthy vs. what needs attention.
+=======
+I’m actively developing this while open to **remote software engineering opportunities** (Python, Java, AI tools, backend, pipelines, architecture). I’m also happy to take on 1–2 initial projects (paid or pro-bono) to prove my delivery quality and build references.
+>>>>>>> a5c456daddabdc2ff57b5850c26c5bb826f55e4b
 
+## Quick Start (for contributors or reviewers)
 
+```bash
+# Clone the repo
+git clone https://github.com/andremailexpress-cloud/ai--assistant.git
+cd ai--assistant
 
+# Install dependencies (update requirements.txt as needed)
+pip install -r requirements.txt
 
+# Run the assistant (command will be updated as core stabilizes)
+python main.py
