@@ -1,5 +1,9 @@
-# AI Assistant – Intelligent Personal Companion
 
+# AI Assistant
+
+**Status:** Core pipeline working • File indexing active • Avatar UI in progress
+
+A personal AI that remembers your files and context across sessions.
 A modular, personalized AI assistant built with Python (and Java capabilities). It learns from the user, handles files intelligently, and can be extended with custom skills.
 
 This is my flagship personal project that demonstrates strong skills in:
