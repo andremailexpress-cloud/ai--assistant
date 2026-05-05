@@ -1,48 +1,115 @@
+# AI Assistant Platform
 
-# AI Assistant
+A modular, personalized AI assistant with a living avatar, RAG over user files, a knowledge graph, and a skill marketplace. Built on behavioral science. Designed to help users become better — not to exploit them.
 
-**Status:** Core pipeline working • File indexing active • Avatar UI in progress
+---
 
-A personal AI that remembers your files and context across sessions.
-A modular, personalized AI assistant built with Python (and Java capabilities). It learns from the user, handles files intelligently, and can be extended with custom skills.
+## Stack
 
-This is my flagship personal project that demonstrates strong skills in:
-- Clean Python architecture & modular design
-- Systems thinking & pipeline development
-- Creative problem-solving
-- AI integration (Gemini Flash backbone)
-- Self-taught software engineering
+| Layer | Technology |
+|-------|-----------|
+| Backend API | Node.js 20 + Fastify + TypeScript |
+| Frontend | React 18 + Vite + Three.js + TypeScript |
+| RAG Service | Python 3.11 + FastAPI |
+| Primary DB | PostgreSQL 16 + pgvector |
+| Graph DB | Neo4j AuraDB |
+| Cache | Redis 7 |
+| ORM | Prisma |
+| Auth | JWT (access + refresh) + TOTP MFA |
+| LLM | Model-agnostic (NVIDIA NIM / Llama 3.3 70B for dev) |
+| Payments | Stripe |
+| CI/CD | GitHub Actions |
+| Infra | Docker + Kubernetes |
 
-Live demo / screenshots coming soon.
+---
 
-## Key Features (Current MVP)
+## Monorepo Structure
 
-- **Modular Skill System** — Add or remove capabilities without breaking the core
-- **Per-User Learning** — Each user gets a fresh assistant that adapts over time
-- **File Workspace** — Drag & drop documents, PDFs, code, notes → the assistant indexes them and uses the content for better answers
-- **Living Avatar** — Visual representation that reacts to the assistant’s state (thinking, confident, learning, etc.)
-- **Agent-like Coordination** — Skills can work together intelligently
-- **Privacy-First Design** — Complete user isolation
+```
+packages/
+  backend/      — Fastify API (auth, skills, avatar, LLM gateway)
+  frontend/     — React workspace UI + Three.js avatar
+  rag-service/  — Python RAG pipeline, embeddings, semantic search
+  shared/       — Types, constants, sphere definitions (consumed by all packages)
+docs/
+  ADR/          — Architecture Decision Records
+  ADR/psychology/ — Behavioral science research
+```
 
-## Tech Stack
+---
 
-- **Core Language**: Python
-- **LLM Integration**: Google Gemini Flash 1.5
-- **Architecture**: Modular plugin system with skill registry
-- **Frontend/UI**: (React / Three.js for avatar – in progress)
-- **Additional Skills**: Java components available when needed for performance-critical parts
-- **Planned**: Vector embeddings, knowledge graph, agent swarm orchestration
-
-
-## Quick Start (for contributors or reviewers)
+## Quick Start
 
 ```bash
-# Clone the repo
+# Requires: Docker Desktop, Node.js 20+
 git clone https://github.com/andremailexpress-cloud/ai--assistant.git
 cd ai--assistant
+cp .env.example .env   # fill in secrets
+npm install
+npm run dev            # spins up all services via docker compose
+```
 
-# Install dependencies (update requirements.txt as needed)
-pip install -r requirements.txt
+Services:
+- Frontend → http://localhost:3000
+- Backend API → http://localhost:3001
+- RAG Service → http://localhost:8000
 
-# Run the assistant (command will be updated as core stabilizes)
-python main.py
+---
+
+## Current Status
+
+**Phase 1 — Core Platform Foundation** (active)
+
+| Task | Description | Status |
+|------|-------------|--------|
+| T-P1-001 | Database schema (Prisma) | ✅ |
+| T-P1-002 | Prisma migrations + seed | ✅ |
+| T-P1-003 | JWT auth API | ✅ |
+| T-P1-004 | MFA / TOTP | ✅ |
+| T-P1-005 | Model-agnostic LLM gateway (NVIDIA NIM) | ⏳ Next |
+
+Full phase breakdown → [MASTER_WORKFLOW.md](MASTER_WORKFLOW.md)  
+Full product vision → [ROADMAP.md](ROADMAP.md)  
+Behavioral science foundation → [PSYCHOLOGY_RESEARCH_DIRECTIVE.md](PSYCHOLOGY_RESEARCH_DIRECTIVE.md)
+
+---
+
+## Architecture Decisions
+
+| ADR | Decision |
+|-----|----------|
+| [ADR-001](docs/ADR/ADR-001-knowledge-graph-db.md) | Neo4j selected for knowledge graph |
+| [ADR-002](docs/ADR/ADR-002-vector-db.md) | pgvector selected for embeddings |
+
+---
+
+## Tiers
+
+| Tier | Skills | Price |
+|------|--------|-------|
+| Free | 2 | $0 |
+| Pro | 5 | ~$19–24/mo |
+| Business | 15 | ~$59–79/mo |
+| Enterprise | Unlimited | Custom |
+
+---
+
+## Principles
+
+- Psychology-first — every feature is backed by peer-reviewed behavioral science
+- Privacy-first — zero knowledge between users, encrypted at rest and in transit  
+- Ethics-first — no dark patterns, no manufactured urgency, no slot-machine loops
+- No feature ships without a documented behavioral science foundation
+
+---
+
+## Agent Workflow
+
+| Agent | Role |
+|-------|------|
+| Claude Sonnet 4.6 | Head of Planning & Architecture |
+| Qwen3 480b | Primary implementation |
+| Codex | Specialist coder (complex blocks) |
+| DeepSeek V4 | Shadow / substitute |
+| Qwen2.5 Coder | Scaffolding & boilerplate |
+
