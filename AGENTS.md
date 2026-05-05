@@ -30,7 +30,16 @@ ORM: Prisma — schema at `packages/backend/prisma/schema.prisma`
 | T-P1-001 Database schema | ✅ |
 | T-P1-002 Prisma migrations | ✅ |
 | T-P1-003 JWT auth API | ✅ |
-| T-P1-004 MFA (TOTP) | ⏳ ACTIVE |
+| T-P1-004 MFA (TOTP) | ✅ |
+| T-P1-005 Model-agnostic LLM gateway (NVIDIA NIM) | ⏳ NEXT |
+
+## LLM Gateway
+
+The gateway is **model-agnostic** — built on the OpenAI-compatible API spec.  
+Users supply their own `baseUrl`, `apiKey`, and `model` at account level (encrypted, never logged).
+
+**Dev/testing default:** `meta/llama-3.3-70b-instruct` via NVIDIA NIM (`https://integrate.api.nvidia.com/v1`)  
+Limits: 1000 API calls, 40 req/min — no token rate limits (context window is the only constraint).
 
 ## Backend Conventions
 
@@ -59,15 +68,11 @@ Key files:
 - `packages/backend/src/modules/auth/auth.schema.ts` — Zod schemas
 - `packages/backend/src/middleware/jwt.middleware.ts` — JWT verification middleware
 
-## Team Roles (do not reference in output)
-
-- **Claude** — planning, QC, architecture
-- **Codex** — implementation
-- **Qwen3** — boilerplate, scaffolding, tests
 ## Team Roles
 
-- **Claude (Sonnet 4.6)** — **Head of Planning & Architecture.** Operates at the top level for complex reasoning and system-wide reviews. Minimal token usage (special cases only).
+- **Claude (Sonnet 4.6)** — **Head of Planning & Architecture.** Operates at the top level for complex reasoning and system-wide reviews.
 - **Qwen3 (480b)** — **Primary Implementation & Chat.** The daily driver for logic and coding tasks.
 - **Codex** — **Specialist Coder.** Invoked for production-grade implementation when Qwen3 requires assistance.
-- **DeepSeek (V4)** — **The Shadow / Substitute.** Bench model to replace Codex or Qwen3 if malfunctions occur or high-precision logic is required.
-- **Qwen2.5 Coder** — **Scaffolding & Boilerplate.** Handles repetitive code patterns and initial file structures via Continue/Autocomplete.
+- **DeepSeek (V4)** — **The Shadow / Substitute.** Bench model to replace Codex or Qwen3 if malfunctions occur.
+- **Qwen2.5 Coder** — **Scaffolding & Boilerplate.** Handles repetitive code patterns and initial file structures.
+
